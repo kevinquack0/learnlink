@@ -3,10 +3,12 @@ import userRoutes from './routes/userRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import searchRoutes from './routes/searchRoutes';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 const app: Application = express();
 
 // Body Parser Middleware
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -37,7 +39,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Set Port
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 

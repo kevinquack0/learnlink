@@ -30,8 +30,10 @@
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
     "@types/pg": "^8.11.0",
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "express": "^4.17.3",
     "pg": "^8.11.3"
   }
