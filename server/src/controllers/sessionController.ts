@@ -8,7 +8,7 @@ export class SessionController {
         this.sessionService = new SessionService();
     }
 
-    async createSession(req: Request, res: Response) {
+    createSession = async (req: Request, res: Response) => {
         try {
             const session = await this.sessionService.createSession(req.body);
             res.status(201).json(session);
@@ -17,7 +17,7 @@ export class SessionController {
         }
     }
 
-    async getSession(req: Request, res: Response) {
+    getSession = async (req: Request, res: Response) => {
         const sessionId = parseInt(req.params.id);
         if (!sessionId) {
             return res.status(400).json({ message: 'Invalid session ID' });

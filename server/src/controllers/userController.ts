@@ -8,7 +8,7 @@ export default class UserController {
         this.userService = new UserService();
     }
 
-    async registerUser(req: Request, res: Response) {
+    registerUser = async (req: Request, res: Response) => {
         try {
             const user = await this.userService.register(req.body);
             res.status(201).json(user);
@@ -17,11 +17,11 @@ export default class UserController {
         }
     }
 
-    async loginUser(req: Request, res: Response) {
+    loginUser = async (req: Request, res: Response) => {
         // Implementation for login
     }
 
-    async getUserProfile(req: Request, res: Response) {
+    getUserProfile = async (req: Request, res: Response) => {
         // Implementation for fetching user profile
     }
 }

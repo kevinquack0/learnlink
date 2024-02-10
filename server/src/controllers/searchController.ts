@@ -8,7 +8,7 @@ export class SearchController {
         this.searchService = new SearchService();
     }
 
-    async searchSessions(req: Request, res: Response) {
+    searchSessions = async (req: Request, res: Response) => {
         try {
             // Extract search criteria from query parameters
             const searchCriteria = {
