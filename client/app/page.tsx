@@ -36,10 +36,10 @@ export default function Home() {
             <Button
               className="ui yellow button circular w-1/2"
               onClick={() => {
-                router.push("/home");
+                router.push("/signup");
               }}
             >
-              Go to Home
+              Signup
             </Button>
             <Button
               className="ui secondary button circular w-1/2"

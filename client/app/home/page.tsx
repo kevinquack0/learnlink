@@ -5,9 +5,9 @@ import styles from '../../styles/Home.module.scss'
 export default function page() {
 
     return (
-        <div className="flex justify-center items-center w-full h-screen">
+        <div className="flex justify-center items-center w-full h-screen" style={{ background: "#0F0F0F" }}>
 
-            <p className={styles.redtext}>page </p>
+            <p className={styles.title}>Home </p>
 
         </div>
     )
