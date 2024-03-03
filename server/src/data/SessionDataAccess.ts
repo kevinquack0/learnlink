@@ -50,21 +50,5 @@ export class SessionDataAccess {
             throw new Error('Error retrieving session from database');
         }
     }
-
-    async deleteSessionById(sessionId: number): Promise<SessionDto | null> {
-        const query = 'DELETE * FROM sessions WHERE id = $1';
-        const values = [sessionId];
-
-        try {
-            const { rows } = await pool.query(query, values);
-            if (rows.length) {
-                return rows[0] as SessionDto;
-            }
-            return null;
-        } catch (error) {
-            throw new Error('Error deleting session from database');
-        }
-    }
-
     // Additional methods for session-related database operations...
 }
