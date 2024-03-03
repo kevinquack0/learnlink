@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import { SessionDto } from '../models/SessionDto';
+import { v4 as uuidv4 } from 'uuid';
 require('dotenv').config();
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -12,16 +13,18 @@ const pool = new Pool({
 export class SessionDataAccess {
     async createSession(session: SessionDto): Promise<SessionDto> {
         const query = `
-      INSERT INTO sessions (title, description, location, duration, start_time, end_time, owner_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
+      INSERT INTO study_session (session_id, title, description, location, start_time, end_time, type, creator_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;
     `;
+        const sessionId = uuidv4();
         const values = [
+            sessionId,
             session.title,
             session.description,
             session.location,
-            session.duration,
             session.startTime,
             session.endTime,
+            session.type,
             session.ownerId,
         ];
 
@@ -47,6 +50,5 @@ export class SessionDataAccess {
             throw new Error('Error retrieving session from database');
         }
     }
-
     // Additional methods for session-related database operations...
 }
