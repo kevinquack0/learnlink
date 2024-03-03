@@ -3,8 +3,8 @@ export interface SessionDto {
     title: string;
     description?: string;
     location: string;
-    duration: number;
     startTime: Date;
     endTime: Date;
+    type: string;
     ownerId: number;
 }
