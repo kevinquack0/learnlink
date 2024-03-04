@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { SessionService } from '../services/sessionService';
+import { UUID } from 'crypto';
 
 export class SessionController {
     private sessionService: SessionService;
@@ -18,7 +19,8 @@ export class SessionController {
     }
 
     getSession = async (req: Request, res: Response) => {
-        const sessionId = parseInt(req.params.id);
+        const sessionId = req.query.id as UUID;
+
         if (!sessionId) {
             return res.status(400).json({ message: 'Invalid session ID' });
         }

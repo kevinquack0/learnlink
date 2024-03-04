@@ -8,7 +8,7 @@ const sessionController = new SessionController();
 router.post('/', sessionController.createSession);
 
 // Retrieve a specific study session by ID
-router.get('/:id', sessionController.getSession);
+router.get('/get', sessionController.getSession);
 
 // Additional session-related routes can be added here
 

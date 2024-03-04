@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { SessionDataAccess } from '../data/SessionDataAccess';
 import { SessionDto } from '../models/SessionDto';
 
@@ -17,7 +18,7 @@ export class SessionService {
         return newSession;
     }
 
-    async getSessionById(sessionId: number): Promise<SessionDto | null> {
+    async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
         // Business logic can be added here as needed, such as access controls or transformations
 
         // Retrieve the session from the data access layer

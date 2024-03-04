@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
 import { SessionDto } from '../models/SessionDto';
 import { v4 as uuidv4 } from 'uuid';
+import { UUID } from 'crypto';
 require('dotenv').config();
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -36,10 +37,10 @@ export class SessionDataAccess {
         }
     }
 
-    async getSessionById(sessionId: number): Promise<SessionDto | null> {
-        const query = 'SELECT * FROM sessions WHERE id = $1';
+    async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
+        const query = 'SELECT * FROM study_session WHERE session_id = $1';
         const values = [sessionId];
-
+        console.log(values);
         try {
             const { rows } = await pool.query(query, values);
             if (rows.length) {
@@ -50,5 +51,6 @@ export class SessionDataAccess {
             throw new Error('Error retrieving session from database');
         }
     }
+
     // Additional methods for session-related database operations...
 }
