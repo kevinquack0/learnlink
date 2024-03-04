@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
 import { SessionDto } from '../models/SessionDto';
 import { v4 as uuidv4 } from 'uuid';
+import { UUID } from 'crypto';
 require('dotenv').config();
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -36,8 +37,8 @@ export class SessionDataAccess {
         }
     }
 
-    async getSessionById(sessionId: number): Promise<SessionDto | null> {
-        const query = 'SELECT * FROM sessions WHERE id = $1';
+    async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
+        const query = 'SELECT * FROM study_session WHERE session_id = $1';
         const values = [sessionId];
 
         try {
@@ -50,5 +51,54 @@ export class SessionDataAccess {
             throw new Error('Error retrieving session from database');
         }
     }
+
+    async deleteSessionById(sessionId: UUID): Promise<JSON | null> {
+        const query = 'DELETE FROM study_session WHERE session_id = $1';
+        const values = [sessionId];
+
+        try {
+            const { rowCount } = await pool.query(query, values);
+            if (rowCount != null) {
+                const message:JSON = <JSON><unknown>{
+                    "message": "Session successfully deleted"
+                  }
+                return message;
+            }
+            return null;
+        } catch (error) {
+            throw new Error('Error deleting session from database');
+        }
+    }
+
+    async updateSession(session: SessionDto, id: UUID): Promise<JSON | null> {
+        const query = `UPDATE study_session 
+        SET title = $2, description = $3, location = $4, start_time = $5, end_time = $6, type = $7, creator_id = $8
+        WHERE session_id = $1;`;
+        const values = [
+            id,
+            session.title,
+            session.description,
+            session.location,
+            session.startTime,
+            session.endTime,
+            session.type,
+            session.ownerId,
+        ];
+
+        try {
+            const { rowCount } = await pool.query(query, values);
+            if (rowCount != null) {
+                const message:JSON = <JSON><unknown>{
+                    "message": "Session successfully updated"
+                  }
+                return message;
+            }
+            return null;
+        } catch (error) {
+            console.log(error);
+            throw new Error('Error updating session in database');
+        }
+    }
+
     // Additional methods for session-related database operations...
 }
