@@ -40,7 +40,7 @@ export class SessionDataAccess {
     async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
         const query = 'SELECT * FROM study_session WHERE session_id = $1';
         const values = [sessionId];
-        console.log(values);
+
         try {
             const { rows } = await pool.query(query, values);
             if (rows.length) {
@@ -49,6 +49,24 @@ export class SessionDataAccess {
             return null;
         } catch (error) {
             throw new Error('Error retrieving session from database');
+        }
+    }
+
+    async deleteSessionById(sessionId: UUID): Promise<JSON | null> {
+        const query = 'DELETE FROM study_session WHERE session_id = $1';
+        const values = [sessionId];
+
+        try {
+            const { rowCount } = await pool.query(query, values);
+            if (rowCount != null) {
+                const message:JSON = <JSON><unknown>{
+                    "message": "Session successfully deleted"
+                  }
+                return message;
+            }
+            return null;
+        } catch (error) {
+            throw new Error('Error deleting session from database');
         }
     }
 

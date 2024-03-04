@@ -10,6 +10,9 @@ router.post('/', sessionController.createSession);
 // Retrieve a specific study session by ID
 router.get('/get', sessionController.getSession);
 
+// Delete a specific study session by ID
+router.delete('/delete', sessionController.deleteSession);
+
 // Additional session-related routes can be added here
 
 export default router;

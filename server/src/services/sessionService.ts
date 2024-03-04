@@ -26,5 +26,13 @@ export class SessionService {
         return session;
     }
 
+    async deleteSessionById(sessionId: UUID): Promise<JSON | null> {
+        // Business logic can be added here as needed, such as access controls or transformations
+
+        // Retrieve the session from the data access layer
+        const session = await this.sessionDataAccess.deleteSessionById(sessionId);
+        return session;
+    }
+
     // Additional methods for session-related operations can be added here
 }

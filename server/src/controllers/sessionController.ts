@@ -37,5 +37,24 @@ export class SessionController {
         }
     }
 
+    deleteSession = async (req: Request, res: Response) => {
+        const sessionId = req.query.id as UUID;
+
+        if (!sessionId) {
+            return res.status(400).json({ message: 'Invalid session ID' });
+        }
+
+        try {
+            const session = await this.sessionService.deleteSessionById(sessionId);
+            if (session) {
+                res.status(200).json(session);
+            } else {
+                res.status(404).json({ message: 'Session not found' });
+            }
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
     // Additional methods for session-related operations...
 }
