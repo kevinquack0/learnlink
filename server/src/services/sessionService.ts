@@ -34,5 +34,14 @@ export class SessionService {
         return session;
     }
 
+    async updateSession(sessionData: SessionDto, id: UUID): Promise<JSON | null> {
+        // You could add business logic here before creating the session
+        // For example, validating the session data, checking for scheduling conflicts, etc.
+
+        // After business logic has been applied, create the session
+        const newSession = await this.sessionDataAccess.updateSession(sessionData, id);
+        return newSession;
+    }
+
     // Additional methods for session-related operations can be added here
 }

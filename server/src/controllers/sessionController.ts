@@ -56,5 +56,16 @@ export class SessionController {
         }
     }
 
+    updateSession = async (req: Request, res: Response) => {
+        const sessionId = req.query.id as UUID;
+        
+        try {
+            const session = await this.sessionService.updateSession(req.body, sessionId);
+            res.status(201).json(session);
+        } catch (error: any) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
     // Additional methods for session-related operations...
 }

@@ -70,5 +70,35 @@ export class SessionDataAccess {
         }
     }
 
+    async updateSession(session: SessionDto, id: UUID): Promise<JSON | null> {
+        const query = `UPDATE study_session 
+        SET title = $2, description = $3, location = $4, start_time = $5, end_time = $6, type = $7, creator_id = $8
+        WHERE session_id = $1;`;
+        const values = [
+            id,
+            session.title,
+            session.description,
+            session.location,
+            session.startTime,
+            session.endTime,
+            session.type,
+            session.ownerId,
+        ];
+
+        try {
+            const { rowCount } = await pool.query(query, values);
+            if (rowCount != null) {
+                const message:JSON = <JSON><unknown>{
+                    "message": "Session successfully updated"
+                  }
+                return message;
+            }
+            return null;
+        } catch (error) {
+            console.log(error);
+            throw new Error('Error updating session in database');
+        }
+    }
+
     // Additional methods for session-related database operations...
 }
