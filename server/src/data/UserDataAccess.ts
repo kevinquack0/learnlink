@@ -2,6 +2,9 @@ import { Pool } from 'pg';
 import { UserDto } from '../models/UserDto';
 import { v4 as uuidv4 } from 'uuid';
 import { UUID } from 'crypto';
+import { Login } from '../models/Login';
+import bcrypt from 'bcrypt';
+
 require('dotenv').config();
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -56,4 +59,46 @@ export class UserDataAccess {
             throw new Error('Error creating new user in database');
         }
     }
+
+    async logInUser(user: Login): Promise<UserDto | null> {
+        const query = 'SELECT * FROM student WHERE email = $1';
+        const values = [user.email];
+        try {
+            const { rows } = await pool.query(query, values);
+    
+            if (rows.length === 0) {
+                return null;
+            }
+    
+            const output = await this.checkPassword(user.password, rows);
+            if (output) {
+                return rows[0] as UserDto;
+            }
+    
+            return null;
+        } catch (error) {
+            throw new Error('Error fetching user from database');
+        }
+    }
+    
+    async checkPassword(guess: string, rows: Array<UserDto>): Promise<boolean> {
+        for (let i = 0; i < rows.length; i++) {
+            const res = await new Promise<boolean>((resolve, reject) => {
+                bcrypt.compare(guess, rows[i].password, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+    
+            if (res) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
+    
 }
