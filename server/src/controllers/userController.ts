@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
+import { UUID } from 'crypto';
 
 export default class UserController {
     private userService: UserService;
@@ -22,6 +23,21 @@ export default class UserController {
     }
 
     getUserProfile = async (req: Request, res: Response) => {
-        // Implementation for fetching user profile
+        const userId = req.query.id as UUID;
+
+        if (!userId) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
+
+        try {
+            const user = await this.userService.getUserById(userId);
+            if (user) {
+                res.status(200).json(user);
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
     }
 }

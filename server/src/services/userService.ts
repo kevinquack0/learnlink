@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { UserDataAccess } from '../data/UserDataAccess';
 import { UserDto } from '../models/UserDto';
 import bcrypt from 'bcrypt';
@@ -15,7 +16,7 @@ export class UserService {
         return newUser;
     }
 
-    async getUserById(userId: number): Promise<UserDto | null> {
+    async getUserById(userId: UUID): Promise<UserDto | null> {
         const user = await this.userDataAccess.getUserById(userId);
         return user;
     }

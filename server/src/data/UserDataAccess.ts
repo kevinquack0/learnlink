@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
 import { UserDto } from '../models/UserDto';
 import { v4 as uuidv4 } from 'uuid';
+import { UUID } from 'crypto';
 require('dotenv').config();
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -11,8 +12,8 @@ const pool = new Pool({
 });
 
 export class UserDataAccess {
-    async getUserById(userId: number): Promise<UserDto | null> {
-        const query = 'SELECT * FROM users WHERE id = $1';
+    async getUserById(userId: UUID): Promise<UserDto | null> {
+        const query = 'SELECT * FROM student WHERE student_id = $1';
         const values = [userId];
 
         try {
