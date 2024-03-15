@@ -71,8 +71,8 @@ export class UserDataAccess {
             }
     
             const output = await this.checkPassword(user.password, rows);
-            if (output) {
-                return rows[0] as UserDto;
+            if (output >= 0) {
+                return rows[output] as UserDto;
             }
     
             return null;
@@ -81,7 +81,7 @@ export class UserDataAccess {
         }
     }
     
-    async checkPassword(guess: string, rows: Array<UserDto>): Promise<boolean> {
+    async checkPassword(guess: string, rows: Array<UserDto>): Promise<number> {
         for (let i = 0; i < rows.length; i++) {
             const res = await new Promise<boolean>((resolve, reject) => {
                 bcrypt.compare(guess, rows[i].password, (err, result) => {
@@ -94,11 +94,11 @@ export class UserDataAccess {
             });
     
             if (res) {
-                return true;
+                return i;
             }
         }
     
-        return false;
+        return -1;
     }
     
 }
