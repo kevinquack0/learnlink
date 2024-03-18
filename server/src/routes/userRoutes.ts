@@ -11,6 +11,6 @@ router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
 
 // Get user profile
-router.get('/profile/:id', userController.getUserProfile);
+router.get('/profile', userController.getUserProfile);
 
 export default router;
