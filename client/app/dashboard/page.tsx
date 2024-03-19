@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon } from "@heroicons/react/16/solid";
 import { Fragment } from "react";
+import { Icon } from 'semantic-ui-react'
 
 const navigation = [
     { name: 'Dashboard', href: '#', current: true},
@@ -103,11 +104,11 @@ export default function Dashboard(){
                                                           item.name == 'Sign out' ? (
                                                             <button
                                                                 onClick={() => (
-                                                                    router.push('/home')
+                                                                    router.push('/')
                                                                 )}
                                                                 className={classNames(
                                                                     active ? 'bg-gray-100' : '',
-                                                                    'block px-4 py-2 text-sm text-gray-700' 
+                                                                    'block px-4 py-2 text-sm text-gray-700 w-full text-left' 
                                                                 )}
                                                             >
                                                                 {item.name}
