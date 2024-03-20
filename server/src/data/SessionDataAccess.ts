@@ -12,7 +12,7 @@ const pool = new Pool({
 });
 
 export class SessionDataAccess {
-    async createSession(session: SessionDto): Promise<SessionDto> {
+    async createSession(session: any): Promise<any> {
         const query = `
       INSERT INTO study_session (session_id, title, description, location, start_time, end_time, type, creator_id)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;
@@ -26,17 +26,29 @@ export class SessionDataAccess {
             session.startTime,
             session.endTime,
             session.type,
-            session.ownerId,
+            session.creatorId,
         ];
 
         try {
             const { rows } = await pool.query(query, values);
             return rows[0] as SessionDto;
         } catch (error) {
+            console.log('123', error)
             throw new Error('Error creating session in database');
         }
     }
+    async getAllSessionsByStudentId(studentId: UUID): Promise<SessionDto[]> {
+        const query = 'SELECT * FROM study_session WHERE creator_id = $1';
+        const values = [studentId];
 
+        try {
+            const { rows } = await pool.query(query, values);
+            return rows as SessionDto[];
+        } catch (error) {
+            console.log("error23", error)
+            throw new Error('Error retrieving sessions from database');
+        }
+    }
     async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
         const query = 'SELECT * FROM study_session WHERE session_id = $1';
         const values = [sessionId];
@@ -59,9 +71,9 @@ export class SessionDataAccess {
         try {
             const { rowCount } = await pool.query(query, values);
             if (rowCount != null) {
-                const message:JSON = <JSON><unknown>{
+                const message: JSON = <JSON><unknown>{
                     "message": "Session successfully deleted"
-                  }
+                }
                 return message;
             }
             return null;
@@ -88,9 +100,9 @@ export class SessionDataAccess {
         try {
             const { rowCount } = await pool.query(query, values);
             if (rowCount != null) {
-                const message:JSON = <JSON><unknown>{
+                const message: JSON = <JSON><unknown>{
                     "message": "Session successfully updated"
-                  }
+                }
                 return message;
             }
             return null;

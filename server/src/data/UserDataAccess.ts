@@ -40,7 +40,6 @@ export class UserDataAccess {
         const studentId = uuidv4();
         // Convert classes array to a comma-separated string
         const classesString = user.classes.join(',');
-
         const values = [
             studentId,
             user.name,
@@ -65,22 +64,22 @@ export class UserDataAccess {
         const values = [user.email];
         try {
             const { rows } = await pool.query(query, values);
-    
+
             if (rows.length === 0) {
                 return null;
             }
-    
+
             const output = await this.checkPassword(user.password, rows);
             if (output >= 0) {
                 return rows[output] as UserDto;
             }
-    
+
             return null;
         } catch (error) {
             throw new Error('Error fetching user from database');
         }
     }
-    
+
     async checkPassword(guess: string, rows: Array<UserDto>): Promise<number> {
         for (let i = 0; i < rows.length; i++) {
             const res = await new Promise<boolean>((resolve, reject) => {
@@ -92,13 +91,13 @@ export class UserDataAccess {
                     }
                 });
             });
-    
+
             if (res) {
                 return i;
             }
         }
-    
+
         return -1;
     }
-    
+
 }

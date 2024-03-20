@@ -33,7 +33,17 @@ export class SessionService {
         const session = await this.sessionDataAccess.deleteSessionById(sessionId);
         return session;
     }
+    async getAllSessionsByStudentId(studentId: UUID): Promise<SessionDto[] | null> {
+        // Business logic can be added here as needed, such as access controls or transformations
 
+        // Retrieve the sessions from the data access layer
+        try {
+            const sessions = await this.sessionDataAccess.getAllSessionsByStudentId(studentId);
+            return sessions.length > 0 ? sessions : [];
+        } catch (error: any) {
+            throw error;
+        }
+    }
     async updateSession(sessionData: SessionDto, id: UUID): Promise<JSON | null> {
         // You could add business logic here before creating the session
         // For example, validating the session data, checking for scheduling conflicts, etc.
