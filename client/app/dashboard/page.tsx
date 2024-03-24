@@ -170,7 +170,7 @@ export default function Dashboard() {
                                                                 item.name == 'Sign out' ? (
                                                                     <button
                                                                         onClick={() => (
-                                                                            router.push('/')
+                                                                            router.push('/home')
                                                                         )}
                                                                         className={classNames(
                                                                             active ? 'bg-gray-100' : '',

@@ -3,7 +3,7 @@ import React from "react";
 
 const Hero = () => {
     return(
-        <div className="w-full bg-white pt-14 pb-2">
+        <div className="w-full bg-white p-14 pb-2">
             <div className="max-w-[1480px] m-auto grid grid-cols-2">
                 <div>
                     <p className="text-2xl text-blue-400 font-medium">ONE STEP CLOSER TOWARDS ACADEMIC SUCCESS!</p>
@@ -12,7 +12,7 @@ const Hero = () => {
                     <button></button>
                 </div>
 
-                <img className="-mt-[150px] w-[600px]"src="/learnlink-logo.webp" />
+                <img className="-mt-[50px] w-[400px] z-0"src="/learnlink-logo.png" />
             </div>
         </div>
     )
