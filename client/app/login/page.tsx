@@ -1,16 +1,42 @@
 "use client"
 
-
+import { useState } from "react";
 import { useFetch } from "@/hooks/useFetch";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
     const { data, loading, error, fetchData } = useFetch(
-        "/users/register",
+        "/users/login",
         "POST"
     );
-
+    
     const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        console.log('Form submitted'); // Additional logging
+    
+        const userData = { email, password };
+        await fetchData(userData); // This call should update 'data' state with user info or error
+    
+        // Check if 'data' is updated with user info (meaning login was successful)
+        if (data && !error) {
+            console.log('Redirecting to dashboard'); // Additional logging
+            router.push('/dashboard'); // Adjust the route as necessary
+        } else {
+            // Handle case where login is not successful
+            console.error('Login failed', error); // Log the error state
+        }
+    };
+    
+
+
+
+
+
+
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -25,17 +51,20 @@ export default function Login() {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6" action="#" method="POST"> {/* Form declaration here, put POST method but not entirely sure */}
+                <form className="space-y-6" onSubmit={handleSubmit}> 
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                             Email address
                         </label>
                         <div className="mt-2">
                             <input
-                                id=""
-                                name=""
+                                id="email"
+                                name="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-                            /> {/*believe this gotta compare with our DB entries*/}
+                            /> 
                         </div>
                     </div>
 
@@ -52,8 +81,11 @@ export default function Login() {
                         </div>
                         <div className="mt-2">
                             <input
-                                id=""
-                                name=""
+                                id="password"
+                                name="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
                             />
                         </div>

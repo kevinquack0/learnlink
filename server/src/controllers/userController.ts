@@ -21,9 +21,14 @@ export default class UserController {
     loginUser = async (req: Request, res: Response) => {
         try {
             const user = await this.userService.logInUser(req.body);
-            res.status(201).json(user);
+            // Set up the session or token here if authentication is successful
+            res.status(200).json(user); // 200 OK is more appropriate for successful login
         } catch (error: any) {
-            res.status(400).json({ message: error.message });
+            if (error.message === 'User not found' || error.message === 'Invalid password') {
+                res.status(401).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'An error occurred during login' });
+            }
         }
     }
 

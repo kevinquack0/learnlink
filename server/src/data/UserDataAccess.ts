@@ -58,27 +58,27 @@ export class UserDataAccess {
             throw new Error('Error creating new user in database');
         }
     }
-
-    async logInUser(user: Login): Promise<UserDto | null> {
+    
+    
+    async logInUser(user: Login): Promise<UserDto> {
         const query = 'SELECT * FROM student WHERE email = $1';
         const values = [user.email];
         try {
             const { rows } = await pool.query(query, values);
-
             if (rows.length === 0) {
-                return null;
+                throw new Error('User not found');
             }
-
             const output = await this.checkPassword(user.password, rows);
-            if (output >= 0) {
-                return rows[output] as UserDto;
+            if (output < 0) {
+                throw new Error('Invalid password');
             }
-
-            return null;
+            return rows[output] as UserDto;
         } catch (error) {
+            // Error should be logged in real applications
             throw new Error('Error fetching user from database');
         }
     }
+
 
     async checkPassword(guess: string, rows: Array<UserDto>): Promise<number> {
         for (let i = 0; i < rows.length; i++) {
