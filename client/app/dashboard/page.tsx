@@ -9,6 +9,7 @@ import { Icon } from 'semantic-ui-react'
 import { useAccount } from "@/context/AccountContext";
 import EventForm from "@/components/EventForm";
 
+
 const navigationStart = [
     { name: 'My Sessions', selected: true },
     { name: 'Find Sessions' },
@@ -23,23 +24,63 @@ const userNavigation = [
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
-const mockData = [
-    { title: "Study Session 1", subtitle: "Introduction to Programming", tags: ["CPSC 101", "CPSC 102"] },
-    { title: "Study Session 2", subtitle: "Data Structures", tags: ["CPSC 201", "CPSC 202"] },
-    { title: "Study Session 3", subtitle: "Algorithms", tags: ["CPSC 301", "CPSC 302"] },
-    { title: "Study Session 4", subtitle: "Operating Systems", tags: ["CPSC 401", "CPSC 402"] },
-    { title: "Study Session 5", subtitle: "Computer Networks", tags: ["CPSC 501", "CPSC 502"] },
-    { title: "Study Session 6", subtitle: "Database Systems", tags: ["CPSC 601", "CPSC 602"] },
-    { title: "Study Session 7", subtitle: "Software Engineering", tags: ["CPSC 701", "CPSC 702"] },
-    { title: "Study Session 8", subtitle: "Artificial Intelligence", tags: ["CPSC 801", "CPSC 802"] },
-    { title: "Study Session 9", subtitle: "Machine Learning", tags: ["CPSC 901", "CPSC 902"] },
-    { title: "Study Session 10", subtitle: "Cloud Computing", tags: ["CPSC 1001", "CPSC 1002"] },
-];
-const Card = (title: string, subtitle: string, tags: string[]) => {
-    return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg m-2">
 
-            <div className="px-6 py-4">
+
+
+
+interface Session {
+    title: string;
+    subtitle: string;
+    tags: string[];
+}
+ 
+  
+
+
+export default function Dashboard() {
+
+
+
+    const [navigation, setNavigation] = useState(navigationStart)
+    const { accountId } = useAccount();
+    const [searchTerm, setSearchTerm] = useState('');
+    const { data, loading, error, fetchData } = useFetch(
+        "/sessions/getAll",
+        "POST"
+    );
+    const mockData = [
+        { title: "Study Session 1", subtitle: "Introduction to Programming", tags: ["CPSC 101", "CPSC 102"] },
+        { title: "Study Session 2", subtitle: "Data Structures", tags: ["CPSC 201", "CPSC 202"] },
+        { title: "Study Session 3", subtitle: "Algorithms", tags: ["CPSC 301", "CPSC 302"] },
+        { title: "Study Session 4", subtitle: "Operating Systems", tags: ["CPSC 401", "CPSC 402"] },
+        { title: "Study Session 5", subtitle: "Computer Networks", tags: ["CPSC 501", "CPSC 502"] },
+        { title: "Study Session 6", subtitle: "Database Systems", tags: ["CPSC 601", "CPSC 602"] },
+        { title: "Study Session 7", subtitle: "Software Engineering", tags: ["CPSC 701", "CPSC 702"] },
+        { title: "Study Session 8", subtitle: "Artificial Intelligence", tags: ["CPSC 801", "CPSC 802"] },
+        { title: "Study Session 9", subtitle: "Machine Learning", tags: ["CPSC 901", "CPSC 902"] },
+        { title: "Study Session 10", subtitle: "Cloud Computing", tags: ["CPSC 1001", "CPSC 1002"] },
+    ];
+    const [filteredSessions, setFilteredSessions] = useState(mockData);
+    // New state to manage "My Sessions"
+    const [mySessions, setMySessions] = useState<Session[]>([]);
+
+    // Function to add a session to "My Sessions"
+    const addToMySessions = (sessionToAdd: Session) => {
+        setMySessions(prevMySessions => {
+            // Check if the session is already added to avoid duplicates
+            if (prevMySessions.find(session => session.title === sessionToAdd.title)) {
+                console.log('Session already added.');
+                return prevMySessions;
+            }
+            return [...prevMySessions, sessionToAdd];
+        });
+    };
+
+    // Updated Card component to include an add button
+    const Card = ({ title, subtitle, tags, addSession }: { title: string; subtitle: string; tags: string[]; addSession: (session: Session) => void }) => {
+        return (
+            <div className="max-w-sm rounded overflow-hidden shadow-lg m-2 relative">
+                <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{title}</div>
                 <p className="text-gray-700 text-base">
                     {subtitle}
@@ -52,46 +93,83 @@ const Card = (title: string, subtitle: string, tags: string[]) => {
 
 
             </div>
-        </div>
-    );
-}
-export default function Dashboard() {
-    const [navigation, setNavigation] = useState(navigationStart)
-    const { accountId } = useAccount();
-    const { data, loading, error, fetchData } = useFetch(
-        "/sessions/getAll",
-        "POST"
-    );
+                <button  
+                    onClick={() => addSession({ title, subtitle, tags })}
+                    className="absolute top-0 right-0 p-2">
+                    <Icon name="plus" className="h-6 w-6 text-blue-500" />
+                </button>
+            </div>
+        );
+    };
 
     useEffect(() => {
+        
         if (accountId) {
             fetchData({ student_id: accountId })
         }
 
     }, [accountId])
+    useEffect(() => {
+        const results = mockData.filter(session =>
+          session.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+        setFilteredSessions(results);
+      }, [searchTerm]);
+
 
     const renderContent = () => {
         if (navigation[0].selected) {
             return (
-                <p>
-                    {!data ? "No Sessions yet" : ''}
-                </p>
-            )
+                <div className="grid grid-cols-3 gap-4">
+                {mySessions.length > 0 ? (
+                    mySessions.map((session, index) => (
+                        <Card
+                            key={index}
+                            title={session.title}
+                            subtitle={session.subtitle}
+                            tags={session.tags}
+                        />
+                    ))
+                ) : (
+                    <p>No Sessions yet</p>
+                )}
+            </div>
+        )
+            
 
         } else if (navigation[1].selected) {
             return (
+              <>
+                <div className="flex justify-center my-4">
+                  <input
+                    type="text"
+                    placeholder="Search by course (e.g., CPSC 101)"
+                    className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
                 <div className="grid grid-cols-3 gap-4">
-                    {mockData.map((session) => (
-                        Card(session.title, session.subtitle, session.tags)
+                    {filteredSessions.map((session, index) => (
+                        <Card
+                            key={index}
+                            title={session.title}
+                            subtitle={session.subtitle}
+                            tags={session.tags}
+                            addSession={addToMySessions}
+                        />
                     ))}
                 </div>
-            )
+              </>
+            );
+          
         } else if (navigation[2].selected) {
 
             return (
                 <EventForm />
             )
         }
+        
 
     }
 
@@ -99,7 +177,7 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-full">
-            <Disclosure as="nav" className="bg-gray-700">
+            <Disclosure as="nav" className="bg-gradient-to-r from-white to-blue-400">
                 {({ open }) => (
                     <>
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -107,7 +185,7 @@ export default function Dashboard() {
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0">
                                         <img
-                                            className="h-12 w-12"
+                                            className="h-16 w-16"
                                             src="/learnlink-logo.webp"
                                             alt="Learnlink"
                                         />
@@ -120,8 +198,8 @@ export default function Dashboard() {
                                                     onClick={() => { setNavigation(navigation.map((navItem) => ({ ...navItem, selected: navItem.name === item.name }))) }}
                                                     className={classNames(
                                                         item.selected
-                                                            ? 'bg-gray-900 text-white cursor-pointer  m-[0px]'
-                                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer m-[0px]', 'rounded-md px-3 py-2 text-sm font-medium'
+                                                            ? 'bg-blue-600 text-white cursor-pointer  m-[0px]'
+                                                            : 'text-black hover:bg-blue-600 hover:text-white cursor-pointer m-[0px]', 'rounded-md px-3 py-2 text-sm font-medium'
                                                     )}
                                                     aria-current={item.selected ? 'page' : undefined}
                                                 >
@@ -137,7 +215,7 @@ export default function Dashboard() {
                                     <div className="ml-4 flex items-center md:ml-6">
                                         <button
                                             type="button"
-                                            className="relative rounded-full bg-gray-700 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus: ring-offset-2 focus:ring-offset-gray-700"
+                                            className="relative rounded-full  p-1 text-white hover:text-blue-600 focus:outline-blue-600 focus:ring-2 focus:ring-blue focus: ring-offset-2 focus:ring-offset-gray-700"
                                         >
                                             <span className="absolute -inset-1.5" />
                                             <span className="sr-only">View notifications</span>

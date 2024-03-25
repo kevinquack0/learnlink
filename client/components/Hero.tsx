@@ -3,11 +3,12 @@ import React from "react";
 
 const Hero = () => {
     return(
-        <div className="w-full bg-white p-14 pb-2">
+        <div className="w-full bg-white py-16 pb-2 bg-gradient-to-r from-white to-blue-400 z-5">
             <div className="max-w-[1480px] m-auto grid grid-cols-2">
                 <div>
                     <p className="text-2xl text-blue-400 font-medium">ONE STEP CLOSER TOWARDS ACADEMIC SUCCESS!</p>
-                    <h1 className="text-5xl font-semibold">Designed by students, for students, LearnLink is the go-to platform for connecting, collaborating, and thriving in your academic journey. </h1>
+                    <h1 className="text-5xl font-semibold">Designed by students, for students. </h1>
+                    <h2 className="text-4xl font-semibold"> Learnlink is the go-to platform for connecting, collaborating, and thriving in your academic journey. </h2>
                     <p className="text-lg text-gray-600">Join the community revolutionizing the way students learn and socialize</p>
                     <button></button>
                 </div>

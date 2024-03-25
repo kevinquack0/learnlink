@@ -24,9 +24,9 @@ const About = () => {
         },
     ];
     return (
-        <div className="w-full py-14 mt-1.5">
+        <div className="w-full py-14 bg-gradient-to-r from-white to-blue-400 z-5">
             <div className="flex justify-center items-center flex-col">
-                <p>Why Learnlink?</p>
+                <p className="text-3xl italic">Why Learnlink?</p>
                 <h1 className="text-blue-400">About Us</h1>
                 <p className="w-[500px]">
                 Whether you're looking to study together, share resources, or

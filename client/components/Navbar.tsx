@@ -7,7 +7,7 @@ const Navbar = () => {
     const router = useRouter();
 
     return (
-        <div className="w-full h-[80px] bg-white border-b z-10">
+        <div className="w-full h-[80px] bg-white border-solid border-b-2 border-gray-400 shadow-md z-10">
             <div className="max-w-[1480px] m-auto w-full h-full flex justify-between items-center z-10">
                 <p className="h-[0px] font-semibold hover:font-bold text-4xl">LEARNLINK</p>
 

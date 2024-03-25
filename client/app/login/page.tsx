@@ -1,34 +1,41 @@
 "use client"
-
+import { useEffect } from "react";
 import { useState } from "react";
 import { useFetch } from "@/hooks/useFetch";
 import { useRouter } from "next/navigation";
+import { useAccount } from "@/context/AccountContext";
 
 export default function Login() {
+    const { updateAccountId } = useAccount();
     const { data, loading, error, fetchData } = useFetch(
         "/users/login",
-        "POST"
+        "POST",
+        updateAccountId
     );
     
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    
+
+
+    
+    useEffect(() => {
+        // This will be triggered when 'data' or 'error' changes.
+        
+        if (data && !error) {
+            console.log('Redirecting to dashboard'); // Additional logging
+            router.push('/dashboard'); // Adjust the route as necessary
+        } else if (error) {
+            console.error('Login failed', error); // Log the error state
+        }
+    }, [data, error, router]);
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
         console.log('Form submitted'); // Additional logging
-    
         const userData = { email, password };
-        await fetchData(userData); // This call should update 'data' state with user info or error
-    
-        // Check if 'data' is updated with user info (meaning login was successful)
-        if (data && !error) {
-            console.log('Redirecting to dashboard'); // Additional logging
-            router.push('/dashboard'); // Adjust the route as necessary
-        } else {
-            // Handle case where login is not successful
-            console.error('Login failed', error); // Log the error state
-        }
+        fetchData(userData); // No need to await here as useEffect will handle the response
     };
     
 
@@ -74,8 +81,8 @@ export default function Login() {
                                 Password
                             </label>
                             <div className="text-sm">
-                                <a href="#" className="font-semiboldd text-blue-400 hover:text-blue-500">
-                                    Forgot password?
+                                <a onClick={() => router.push('/')} className="font-semibold text-blue-400 hover:text-blue-500">
+                                    Return to home.
                                 </a>
                             </div>
                         </div>
@@ -103,7 +110,7 @@ export default function Login() {
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                     Don't have an account?{' '}
-                    <a href="#" className="font-semibold leading-6 text-blue-400 hover:text-blue-200">
+                    <a onClick={() => {router.push('/signup')}} className="font-semibold leading-6 text-blue-400 hover:text-blue-200">
                         Create an account now
                     </a> {/* Here would just redirect to sign in page.*/}
                 </p>

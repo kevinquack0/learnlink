@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 const CTA = () => {
     const router = useRouter();
     return (
-        <div className="w-full bg-white py-16">
+        <div className="w-full bg-gradient py-16 bg-gradient-to-r from-white to-blue-400 border-solid border-b-2 border-gray-400 z-5">
             <div className="md:max-w-[1480px] m-auto grid md:grid-cols-2 max-w-[600px] items-center md:px-0">
                 <Image className='rounded-lg'src="/background-students.jpg" alt="Students" width={500} height={500} />
                 <div>

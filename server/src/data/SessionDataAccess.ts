@@ -34,7 +34,7 @@ export class SessionDataAccess {
             return rows[0] as SessionDto;
         } catch (error) {
             console.log('123', error)
-            throw new Error('Error creating session in database');
+            throw new Error('Error creating session in database' + "-->" + values);
         }
     }
     async getAllSessionsByStudentId(studentId: UUID): Promise<SessionDto[]> {

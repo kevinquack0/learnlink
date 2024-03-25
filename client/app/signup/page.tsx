@@ -167,7 +167,16 @@ export default function page() {
                     }} >
                     Signup
                 </button>
+            </div>
 
+            <div className='flex w-full justify-center mt-4'>
+                <button
+                    className='font-semibold text-blue-400 hover:text-blue-500'
+                    onClick={() => {
+                        router.push('/home')
+                    }}>
+                    Return to home.
+                </button>
             </div>
 
 
