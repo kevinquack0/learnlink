@@ -1,6 +1,10 @@
 import { Pool } from 'pg';
 import { UserDto } from '../models/UserDto';
 import { v4 as uuidv4 } from 'uuid';
+import { UUID } from 'crypto';
+import { Login } from '../models/Login';
+import bcrypt from 'bcrypt';
+
 require('dotenv').config();
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -11,8 +15,8 @@ const pool = new Pool({
 });
 
 export class UserDataAccess {
-    async getUserById(userId: number): Promise<UserDto | null> {
-        const query = 'SELECT * FROM users WHERE id = $1';
+    async getUserById(userId: UUID): Promise<UserDto | null> {
+        const query = 'SELECT * FROM student WHERE student_id = $1';
         const values = [userId];
 
         try {
@@ -36,7 +40,6 @@ export class UserDataAccess {
         const studentId = uuidv4();
         // Convert classes array to a comma-separated string
         const classesString = user.classes.join(',');
-
         const values = [
             studentId,
             user.name,
@@ -55,4 +58,46 @@ export class UserDataAccess {
             throw new Error('Error creating new user in database');
         }
     }
+    
+    
+    async logInUser(user: Login): Promise<UserDto> {
+        const query = 'SELECT * FROM student WHERE email = $1';
+        const values = [user.email];
+        try {
+            const { rows } = await pool.query(query, values);
+            if (rows.length === 0) {
+                throw new Error('User not found');
+            }
+            const output = await this.checkPassword(user.password, rows);
+            if (output < 0) {
+                throw new Error('Invalid password');
+            }
+            return rows[output] as UserDto;
+        } catch (error) {
+            // Error should be logged in real applications
+            throw new Error('Error fetching user from database');
+        }
+    }
+
+
+    async checkPassword(guess: string, rows: Array<UserDto>): Promise<number> {
+        for (let i = 0; i < rows.length; i++) {
+            const res = await new Promise<boolean>((resolve, reject) => {
+                bcrypt.compare(guess, rows[i].password, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+
+            if (res) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 }

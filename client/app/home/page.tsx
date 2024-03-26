@@ -1,14 +1,23 @@
-'use client';
+'use client'
 import { useFetch } from '@/hooks/useFetch';
 import React from 'react'
 import styles from '../../styles/Home.module.scss'
-export default function page() {
+import Navbar from '@/components/Navbar';
+import Hero from '@/components/Hero';
+import About from '@/components/About';
+import CTA from '@/components/CTA';
+import Footer from '@/components/Footer'
 
-    return (
-        <div className="flex justify-center items-center w-full h-screen" style={{ background: "#0F0F0F" }}>
-
-            <p className={styles.title}>Home </p>
-
+const page = () => {
+    return(
+        <div >
+            <Navbar />
+            <Hero />
+            <About />
+            <CTA />
+            <Footer />
         </div>
     )
 }
+
+export default page

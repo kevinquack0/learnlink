@@ -12,7 +12,7 @@ const axiosInstance = axios.create({ baseURL: BASE_URL });
  * @param {Method} method The HTTP method to use for the request. Default is 'GET'.
  * @returns {Object} An object containing the response data, loading state, error message, and a function to fetch the data.
  */
-export const useFetch = <T, P>(url: string, method: Method = 'GET') => {
+export const useFetch = <T, P>(url: string, method: Method = 'GET', updateAccountId: any = null) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -27,6 +27,9 @@ export const useFetch = <T, P>(url: string, method: Method = 'GET') => {
                 ...(payload && { data: payload })
             };
             const response = await axiosInstance(config);
+            if (updateAccountId) {
+                updateAccountId(response.data.student_id)
+            }
             setData(response.data);
             setError(null);
         } catch (err) {

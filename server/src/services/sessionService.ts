@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { SessionDataAccess } from '../data/SessionDataAccess';
 import { SessionDto } from '../models/SessionDto';
 
@@ -9,20 +10,44 @@ export class SessionService {
     }
 
     async createSession(sessionData: SessionDto): Promise<SessionDto> {
-        // You could add business logic here before creating the session
-        // For example, validating the session data, checking for scheduling conflicts, etc.
 
-        // After business logic has been applied, create the session
         const newSession = await this.sessionDataAccess.createSession(sessionData);
         return newSession;
     }
 
-    async getSessionById(sessionId: number): Promise<SessionDto | null> {
-        // Business logic can be added here as needed, such as access controls or transformations
+    async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
 
-        // Retrieve the session from the data access layer
         const session = await this.sessionDataAccess.getSessionById(sessionId);
         return session;
+    }
+
+    async deleteSessionById(sessionId: UUID): Promise<JSON | null> {
+
+        const session = await this.sessionDataAccess.deleteSessionById(sessionId);
+        return session;
+    }
+    async getAllSessionsByStudentId(studentId: UUID): Promise<SessionDto[] | null> {
+
+        try {
+            const sessions = await this.sessionDataAccess.getAllSessionsByStudentId(studentId);
+            return sessions.length > 0 ? sessions : [];
+        } catch (error: any) {
+            throw error;
+        }
+    }
+    async getAllSessions(studentId: UUID): Promise<SessionDto[] | null> {
+
+        try {
+            const sessions = await this.sessionDataAccess.getAllSessionsExceptStudentId(studentId);
+            return sessions.length > 0 ? sessions : [];
+        } catch (error: any) {
+            throw error;
+        }
+    }
+    async updateSession(sessionData: SessionDto, id: UUID): Promise<JSON | null> {
+
+        const newSession = await this.sessionDataAccess.updateSession(sessionData, id);
+        return newSession;
     }
 
     // Additional methods for session-related operations can be added here

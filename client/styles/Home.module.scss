@@ -1,4 +1,11 @@
 .title {
-    color: white;
-    font-size: 30px;
+  color: white;
+  font-size: 30px;
+}
+#__next {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  inset: 0;
 }

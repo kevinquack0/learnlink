@@ -4,12 +4,20 @@ import { SessionController } from '../controllers/sessionController';
 const router = express.Router();
 const sessionController = new SessionController();
 
-// Create a new study session
+
 router.post('/', sessionController.createSession);
 
-// Retrieve a specific study session by ID
-router.get('/:id', sessionController.getSession);
+router.post('/getById', sessionController.getByIdSessions);
 
-// Additional session-related routes can be added here
+router.get('/get', sessionController.getSession);
+
+router.post('/getAll', sessionController.getAllSessions);
+
+
+
+router.delete('/delete', sessionController.deleteSession);
+
+router.put('/update', sessionController.updateSession);
+
 
 export default router;
