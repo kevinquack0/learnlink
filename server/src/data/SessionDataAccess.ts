@@ -49,6 +49,19 @@ export class SessionDataAccess {
             throw new Error('Error retrieving sessions from database');
         }
     }
+    async getAllSessionsExceptStudentId(studentId: UUID): Promise<SessionDto[]> {
+        const query = 'SELECT * FROM study_session';
+
+
+        try {
+            const { rows } = await pool.query(query);
+            return rows as SessionDto[];
+        } catch (error) {
+            console.log("error23", error)
+            throw new Error('Error retrieving sessions from database');
+        }
+    }
+
     async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
         const query = 'SELECT * FROM study_session WHERE session_id = $1';
         const values = [sessionId];

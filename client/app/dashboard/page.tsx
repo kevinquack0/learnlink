@@ -8,6 +8,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Icon } from 'semantic-ui-react'
 import { useAccount } from "@/context/AccountContext";
 import EventForm from "@/components/EventForm";
+import { format } from "date-fns";
 
 
 const navigationStart = [
@@ -17,7 +18,6 @@ const navigationStart = [
 ]
 
 const userNavigation = [
-    { name: 'Your Profile', href: '#' },
     { name: 'Sign out', href: '#' },
 ]
 
@@ -33,8 +33,8 @@ interface Session {
     subtitle: string;
     tags: string[];
 }
- 
-  
+
+
 
 
 export default function Dashboard() {
@@ -44,10 +44,19 @@ export default function Dashboard() {
     const [navigation, setNavigation] = useState(navigationStart)
     const { accountId } = useAccount();
     const [searchTerm, setSearchTerm] = useState('');
-    const { data, loading, error, fetchData } = useFetch(
+    // const { data, loading, error, fetchData } = useFetch(
+    //     "/sessions/getById",
+    //     "POST"
+    // );
+    const { data: sessionsData, loading, error, fetchData }: any = useFetch(
         "/sessions/getAll",
         "POST"
     );
+    const { data, loading: __, error: _, fetchData: fetchById }: any = useFetch(
+        "/sessions/getById",
+        "POST"
+    );
+    console.log("data", data)
     const mockData = [
         { title: "Study Session 1", subtitle: "Introduction to Programming", tags: ["CPSC 101", "CPSC 102"] },
         { title: "Study Session 2", subtitle: "Data Structures", tags: ["CPSC 201", "CPSC 202"] },
@@ -77,99 +86,124 @@ export default function Dashboard() {
     };
 
     // Updated Card component to include an add button
-    const Card = ({ title, subtitle, tags, addSession }: { title: string; subtitle: string; tags: string[]; addSession: (session: Session) => void }) => {
+    const Card = ({ title, subtitle, tags, addSession, startDate, endDate, mine }: { title: string; subtitle: string; tags: string[]; addSession: (session: Session) => void, startDate: Date, endDate: Date, mine?: boolean }) => {
+
+
+        const formattedStartDate = startDate ? format(startDate, "MMMM do, h:mma") : 'N/A';
+        const formattedEndDate = endDate ? format(endDate, "h:mma") : 'N/A';
+        const formattedDateRange = `${formattedStartDate}-${formattedEndDate}`;
+        const alreadyAdded = !!mySessions.find(session => session.title === title);
         return (
             <div className="max-w-sm rounded overflow-hidden shadow-lg m-2 relative">
                 <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{title}</div>
-                <p className="text-gray-700 text-base">
-                    {subtitle}
-                </p>
-            </div>
-            <div className="px-6 pt-4 pb-2">
-                {tags && tags.map((tag) => (
-                    <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{tag}</span>
-                ))}
-
-
-            </div>
-                <button  
+                    <div className="font-bold text-xl mb-2">{title}</div>
+                    <p className="text-gray-700 text-base">
+                        {subtitle}
+                    </p>
+                </div>
+                <div className="px-6 pt-4 pb-2">
+                    {tags && tags.map((tag) => (
+                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{tag}</span>
+                    ))}
+                </div>
+                <div className="px-6 pt-2 pb-4">
+                    <p className="text-gray-700 text-base">
+                        {formattedDateRange}
+                    </p>
+                </div>
+                <button
                     onClick={() => addSession({ title, subtitle, tags })}
                     className="absolute top-0 right-0 p-2">
-                    <Icon name="plus" className="h-6 w-6 text-blue-500" />
+                    {!alreadyAdded && !mine && <Icon name="plus" className="h-6 w-6 text-blue-500" />}
                 </button>
             </div>
         );
     };
 
     useEffect(() => {
-        
-        if (accountId) {
+
+        if (accountId && navigation[1].selected) {
             fetchData({ student_id: accountId })
+        } else if (accountId && navigation[0].selected) {
+            fetchById({ student_id: accountId })
         }
 
-    }, [accountId])
+    }, [accountId, navigation])
     useEffect(() => {
-        const results = mockData.filter(session =>
-          session.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-        setFilteredSessions(results);
-      }, [searchTerm]);
+
+        if (sessionsData) {
+            const results = sessionsData.filter((session: any) => {
+
+                return session.type.toLowerCase().includes(searchTerm.toLowerCase())
+            }
+
+            );
+            console.log("Results", results)
+            setFilteredSessions(results);
+        }
+
+    }, [searchTerm, sessionsData, navigation]);
 
 
     const renderContent = () => {
         if (navigation[0].selected) {
             return (
                 <div className="grid grid-cols-3 gap-4">
-                {mySessions.length > 0 ? (
-                    mySessions.map((session, index) => (
-                        <Card
-                            key={index}
-                            title={session.title}
-                            subtitle={session.subtitle}
-                            tags={session.tags}
-                        />
-                    ))
-                ) : (
-                    <p>No Sessions yet</p>
-                )}
-            </div>
-        )
-            
+                    {data && data.length > 0 ? (
+                        data.map((session: any, index: any) => (
+                            <Card
+                                key={index}
+                                title={session.title}
+                                subtitle={session.description}
+                                tags={[session.type]}
+                                startDate={session.start_time}
+                                endDate={session.end_time}
+                                addSession={addToMySessions}
+                                mine={true}
+                            />
+                        ))
+                    ) : (
+                        <p>No Sessions yet</p>
+                    )}
+                </div>
+            )
+
 
         } else if (navigation[1].selected) {
             return (
-              <>
-                <div className="flex justify-center my-4">
-                  <input
-                    type="text"
-                    placeholder="Search by course (e.g., CPSC 101)"
-                    className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                    {filteredSessions.map((session, index) => (
-                        <Card
-                            key={index}
-                            title={session.title}
-                            subtitle={session.subtitle}
-                            tags={session.tags}
-                            addSession={addToMySessions}
+                <>
+                    <div className="flex justify-center my-4">
+                        <input
+                            type="text"
+                            placeholder="Search by course (e.g., CPSC 101)"
+                            className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                    ))}
-                </div>
-              </>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                        {filteredSessions.map((session: any, index) => (
+                            <Card
+                                key={index}
+                                title={session.title}
+                                subtitle={session.description}
+                                tags={[session.type]}
+                                startDate={session.start_time}
+                                endDate={session.end_time}
+                                addSession={addToMySessions}
+                            />
+                        ))}
+                    </div>
+                </>
             );
-          
+
         } else if (navigation[2].selected) {
 
             return (
-                <EventForm />
+                <EventForm setNavigation={setNavigation} />
             )
         }
-        
+
 
     }
 
@@ -218,17 +252,18 @@ export default function Dashboard() {
                                             className="relative rounded-full  p-1 text-white hover:text-blue-600 focus:outline-blue-600 focus:ring-2 focus:ring-blue focus: ring-offset-2 focus:ring-offset-gray-700"
                                         >
                                             <span className="absolute -inset-1.5" />
-                                            <span className="sr-only">View notifications</span>
-                                            <BellIcon className="h-6 w-6" aria-hidden='true' />
+
                                         </button>
 
                                         {/* Profile dropdown  */}
                                         <Menu as="div" className="relative ml-3">
                                             <div>
-                                                <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-700">
+                                                <Menu.Button className="relative flex max-w-xs items-center rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-700">
                                                     <span className="absolute -inset-1.5" />
                                                     <span className="sr-only">Open user menu</span>
-                                                    <img className="h-8 w-8 rounded-full" src="/user.png" alt="" /> {/* Need to add image source here */}
+
+                                                    <img className="h-8 w-8 rounded-full" src="/settings.svg" alt="" /> {/* Need to add image source here */}
+
                                                 </Menu.Button>
                                             </div>
                                             <Transition

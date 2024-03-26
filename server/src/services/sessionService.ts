@@ -10,33 +10,24 @@ export class SessionService {
     }
 
     async createSession(sessionData: SessionDto): Promise<SessionDto> {
-        // You could add business logic here before creating the session
-        // For example, validating the session data, checking for scheduling conflicts, etc.
 
-        // After business logic has been applied, create the session
         const newSession = await this.sessionDataAccess.createSession(sessionData);
         return newSession;
     }
 
     async getSessionById(sessionId: UUID): Promise<SessionDto | null> {
-        // Business logic can be added here as needed, such as access controls or transformations
 
-        // Retrieve the session from the data access layer
         const session = await this.sessionDataAccess.getSessionById(sessionId);
         return session;
     }
 
     async deleteSessionById(sessionId: UUID): Promise<JSON | null> {
-        // Business logic can be added here as needed, such as access controls or transformations
 
-        // Retrieve the session from the data access layer
         const session = await this.sessionDataAccess.deleteSessionById(sessionId);
         return session;
     }
     async getAllSessionsByStudentId(studentId: UUID): Promise<SessionDto[] | null> {
-        // Business logic can be added here as needed, such as access controls or transformations
 
-        // Retrieve the sessions from the data access layer
         try {
             const sessions = await this.sessionDataAccess.getAllSessionsByStudentId(studentId);
             return sessions.length > 0 ? sessions : [];
@@ -44,11 +35,17 @@ export class SessionService {
             throw error;
         }
     }
-    async updateSession(sessionData: SessionDto, id: UUID): Promise<JSON | null> {
-        // You could add business logic here before creating the session
-        // For example, validating the session data, checking for scheduling conflicts, etc.
+    async getAllSessions(studentId: UUID): Promise<SessionDto[] | null> {
 
-        // After business logic has been applied, create the session
+        try {
+            const sessions = await this.sessionDataAccess.getAllSessionsExceptStudentId(studentId);
+            return sessions.length > 0 ? sessions : [];
+        } catch (error: any) {
+            throw error;
+        }
+    }
+    async updateSession(sessionData: SessionDto, id: UUID): Promise<JSON | null> {
+
         const newSession = await this.sessionDataAccess.updateSession(sessionData, id);
         return newSession;
     }

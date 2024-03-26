@@ -6,14 +6,19 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useFetch } from '@/hooks/useFetch';
 import { useAccount } from '@/context/AccountContext';
 
-const EventForm = () => {
+const navigationChange = [
+    { name: 'My Sessions', selected: true },
+    { name: 'Find Sessions' },
+    { name: 'Create Session' },
+]
+const EventForm = ({ setNavigation }: any) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
     const [startTime, setStartTime] = useState(new Date());
     const [endTime, setEndTime] = useState(new Date());
     const [type, setType] = useState('');
-    
+
     const { data, loading, error, fetchData } = useFetch(
         "/sessions/",
         "POST"
@@ -47,11 +52,14 @@ const EventForm = () => {
                 type,
                 creatorId: accountId
             });
+            setNavigation(navigationChange)
         } else {
             // Handle invalid form submission attempt (e.g., show an error message)
             alert('Please fill in all the required fields.');
         }
     };
+
+
     const requiredField = <span className="text-red-500">*</span>;
 
     return (
@@ -88,22 +96,22 @@ const EventForm = () => {
             />
             <Form.Field required>
                 <label>
-                    Start Time 
+                    Start Time
                 </label>
                 <DatePicker
                     selected={startTime}
-                    onChange={(date) => setStartTime(date)}
+                    onChange={(date: any) => setStartTime(date)}
                     showTimeSelect
                     dateFormat="Pp"
                 />
             </Form.Field>
             <Form.Field required>
                 <label>
-                    End Time 
+                    End Time
                 </label>
                 <DatePicker
                     selected={endTime}
-                    onChange={(date) => setEndTime(date)}
+                    onChange={(date: any) => setEndTime(date)}
                     showTimeSelect
                     dateFormat="Pp"
                 />
@@ -111,15 +119,15 @@ const EventForm = () => {
             <Form.Input
                 label={
                     <>
-                        Type {requiredField}
+                        Class {requiredField}
                     </>
                 }
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 required
             />
-           {/* Error messages display */}
-           {formErrors.map((error, index) => (
+            {/* Error messages display */}
+            {formErrors.map((error, index) => (
                 <div key={index} className="text-red-500">{error}</div>
             ))}
 
