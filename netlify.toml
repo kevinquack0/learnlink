@@ -8,7 +8,7 @@
   # Adjust this command to your needs. This is just an example.
   # This example assumes you have a script named `build-functions` in your `server` package.json
   # that prepares your server for deployment, and a similar setup for your client.
-  command = "cd client && npm install && npm run build && npm run export && cd ../server && npm install && npm run build-functions"
+  command = "npm install && npm run build && npm run export && cd ../server && npm install && npm run build-functions"
 
   # Directory to publish (the output of your build command for the client)
   publish = "client/out"
