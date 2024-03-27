@@ -22,8 +22,11 @@ DBeaver is installed.
 ## Installation
 
 1. Clone the repository to your local machine
-2. Navigate to the project directory
-3. Run the following command to install dependencies
+```bash
+git clone repo-link (to be added)
+```
+3. Navigate to the project directory
+4. Run the following command to install dependencies
 
 ```bash
 npm i
@@ -34,6 +37,6 @@ npm run dev
 ```
 5. Open another terminal, and this time navigate to the server directory with `cd server` and run the following command to initialize the backedn
 ```bash
-npm something
+(to be added)
 ```
 
