@@ -1,4 +1,5 @@
 "use client"
+import { FormEvent } from 'react'; // Import FormEvent type from 'react'
 import { useEffect } from "react";
 import { useState } from "react";
 import { useFetch } from "@/hooks/useFetch";
@@ -31,7 +32,7 @@ export default function Login() {
         }
     }, [data, error, router]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent default form submission
         console.log('Form submitted'); // Additional logging
         const userData = { email, password };
