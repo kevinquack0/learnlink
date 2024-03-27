@@ -1,0 +1,40 @@
+# Global settings applied to the whole site
+[build]
+  # Base directory to run the build command
+  # This is relative to the root of your repository
+  base = "client/"
+
+  # Build command
+  command = "npm run build && npm run export"
+
+  # Directory to publish (the output of your build command)
+  publish = "client/out"
+
+  # Environment variables
+  [build.environment]
+    # Example environment variable
+    # NODE_VERSION = "14"
+
+# Redirects and headers
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Functions settings
+[functions]
+  # Directory to store your serverless functions
+  directory = "netlify/functions"
+
+# Example of setting up environment variables for functions
+[functions.environment]
+    DB_USER=postgres
+    DB_HOST=localhost
+    DB_NAME=learnlinkdb
+    DB_PASSWORD=postgres
+    DB_PORT=5432
+
+# Example command to process your server directory into serverless functions
+# You might need a script to convert your server routes into individual function files
+[build]
+  command = "cd server && npm install && npm run build-functions"
