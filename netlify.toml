@@ -4,16 +4,18 @@
   # This is relative to the root of your repository
   base = "client/"
 
-  # Build command
-  command = "npm run build && npm run export"
+  # Combined build command
+  # Adjust this command to your needs. This is just an example.
+  # This example assumes you have a script named `build-functions` in your `server` package.json
+  # that prepares your server for deployment, and a similar setup for your client.
+  command = "cd client && npm install && npm run build && npm run export && cd ../server && npm install && npm run build-functions"
 
-  # Directory to publish (the output of your build command)
+  # Directory to publish (the output of your build command for the client)
   publish = "client/out"
 
-  # Environment variables
+  # Environment variables for the build environment
   [build.environment]
-    # Example environment variable
-    # NODE_VERSION = "14"
+    NODE_VERSION = "14"
 
 # Redirects and headers
 [[redirects]]
@@ -26,15 +28,10 @@
   # Directory to store your serverless functions
   directory = "netlify/functions"
 
-# Example of setting up environment variables for functions
+# Setting up environment variables for functions
 [functions.environment]
-    DB_USER=postgres
-    DB_HOST=localhost
-    DB_NAME=learnlinkdb
-    DB_PASSWORD=postgres
-    DB_PORT=5432
-
-# Example command to process your server directory into serverless functions
-# You might need a script to convert your server routes into individual function files
-[build]
-  command = "cd server && npm install && npm run build-functions"
+    DB_USER = "postgres"
+    DB_HOST = "localhost"
+    DB_NAME = "learnlinkdb"
+    DB_PASSWORD = "postgres"
+    DB_PORT = 5432
