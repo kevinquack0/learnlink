@@ -7,6 +7,9 @@
 
 # Learnlink 🎓
 
+![image](https://github.com/kevinquack0/learnlink/assets/113871755/057be8d6-d72f-4705-9c11-9f9aa61f0c48)
+
+
 Learnlink is an academic focused web application designed to facilitate studying with other students with shared academic interests and schedules. Students can register and create a profile specifying their majors, minors, enrolled courses, and availability. With the search functionality, students can find study sessions with people who share similar study habits, course enrollments, and free time, making it easier to find the perfect study partner or group. Each study session on LearnLink has details like location, duration, and title and descriptions ensuring students have all the information they need to manage their study time.
 
 # Running it locally 👨‍💻
@@ -37,6 +40,6 @@ npm run dev
 ```
 5. Open another terminal, and this time navigate to the server directory with `cd server` and run the following command to initialize the backedn
 ```bash
-(to be added)
+npm start
 ```
 
