@@ -3,6 +3,7 @@
 ![Reactjs](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 
 
 # Learnlink 🎓
@@ -20,13 +21,13 @@ In order to run a local instance, follow these steps:
 
 Make sure that `Node.js` and `npm` are installed on your machine.  
 
-DBeaver is installed.
+DBeaver and PostgresSQL is installed.
 
 ## Installation
 
 1. Clone the repository to your local machine
 ```bash
-git clone repo-link (to be added)
+git clone https://github.com/kevinquack0/learnlink.git
 ```
 3. Navigate to the project directory
 4. Run the following command to install dependencies
