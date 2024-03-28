@@ -30,16 +30,20 @@ DBeaver and PostgresSQL is installed.
 git clone https://github.com/kevinquack0/learnlink.git
 ```
 3. Navigate to the project directory
-4. Run the following command to install dependencies
+
+4. Navigate to the client directory with `cd client` and run the following command to install dependencies and  start the frontend
 
 ```bash
 npm i
 ```
-4. Navigate to the client directory with `cd client` and run the following command to start the frontend
 ```bash
 npm run dev
 ```
-5. Open another terminal, and this time navigate to the server directory with `cd server` and run the following command to initialize the backedn
+5. Open another terminal, and this time navigate to the server directory with `cd server` and run the following command to install dependencies and initialize the backend
+6. 
+```bash
+npm i
+```
 ```bash
 npm start
 ```
